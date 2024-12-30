@@ -5,27 +5,23 @@ import { Login } from '@/pages/auth/Login';
 import { Register } from '@/pages/auth/Register';
 import { KYCVerification } from '@/pages/auth/KYCVerification';
 import { BusinessSetup } from '@/pages/auth/BusinessSetup';
+import { PaymentSetup } from '@/pages/auth/PaymentSetup';
 import { Dashboard } from '@/pages/Dashboard';
 import { Transactions } from '@/pages/Transactions';
 import { GSTFiling } from '@/pages/financial/GSTFiling';
 import { TDSManagement } from '@/pages/financial/TDSManagement';
 import { IncomeTaxFiling } from '@/pages/financial/IncomeTaxFiling';
-import { ComplianceMonitoring } from '@/pages/compliance/ComplianceMonitoring';
-import { AuditAnalytics } from '@/pages/compliance/AuditAnalytics';
-import { FinancialReporting } from '@/pages/compliance/FinancialReporting';
 import { Settings } from '@/pages/Settings';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function AppRoutes() {
   const { user } = useAuth();
 
-  // Protected route wrapper
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     if (!user) return <Navigate to="/login" />;
     return <>{children}</>;
   };
 
-  // Onboarding route wrapper
   const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
     if (!user) return <Navigate to="/login" />;
     if (user.onboardingComplete) return <Navigate to="/dashboard" />;
@@ -42,22 +38,15 @@ export function AppRoutes() {
       {/* Onboarding routes */}
       <Route path="/auth/kyc" element={<OnboardingRoute><KYCVerification /></OnboardingRoute>} />
       <Route path="/auth/business-setup" element={<OnboardingRoute><BusinessSetup /></OnboardingRoute>} />
+      <Route path="/auth/payment-setup" element={<OnboardingRoute><PaymentSetup /></OnboardingRoute>} />
 
       {/* Protected routes */}
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
-        
-        {/* Financial routes */}
         <Route path="/gst" element={<GSTFiling />} />
         <Route path="/tds" element={<TDSManagement />} />
         <Route path="/income-tax" element={<IncomeTaxFiling />} />
-        
-        {/* Compliance routes */}
-        <Route path="/compliance/monitoring" element={<ComplianceMonitoring />} />
-        <Route path="/compliance/audit" element={<AuditAnalytics />} />
-        <Route path="/compliance/reports" element={<FinancialReporting />} />
-        
         <Route path="/settings" element={<Settings />} />
       </Route>
 

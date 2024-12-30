@@ -1,62 +1,61 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { AnimatedLogo } from '@/components/layout/AnimatedLogo';
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
 
 export function Home() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-b from-gray-50 to-white"
-    >
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center space-y-6 mb-12">
-          <h1 className="text-5xl font-bold">
-            Welcome to <span className="text-primary">Finmate</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your all-in-one financial compliance platform for small and medium-sized businesses
-          </p>
-          <div className="flex justify-center gap-4">
-            <Button asChild size="lg">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="text-center space-y-8"
+        >
+          <motion.div variants={item}>
+            <AnimatedLogo />
+          </motion.div>
+
+          <motion.h1
+            variants={item}
+            className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+          >
+            Your All-in-One Financial Compliance Platform
+          </motion.h1>
+
+          <motion.p
+            variants={item}
+            className="text-xl text-gray-300 max-w-2xl mx-auto"
+          >
+            Simplify GST filing, TDS management, and financial compliance for your business
+          </motion.p>
+
+          <motion.div variants={item} className="flex justify-center gap-4">
+            <Button asChild size="lg" className="bg-blue-500 hover:bg-blue-600">
               <Link to="/register">Get Started</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <Link to="/login">Sign In</Link>
             </Button>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6 mt-16">
-          <Card>
-            <CardContent className="p-6 space-y-2">
-              <h3 className="text-xl font-semibold">GST Filing</h3>
-              <p className="text-muted-foreground">
-                Automated GST return filing with real-time tracking and compliance checks
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6 space-y-2">
-              <h3 className="text-xl font-semibold">Income Tax</h3>
-              <p className="text-muted-foreground">
-                Simplified income tax filing with AI-powered optimization suggestions
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6 space-y-2">
-              <h3 className="text-xl font-semibold">Financial Reports</h3>
-              <p className="text-muted-foreground">
-                Generate comprehensive financial reports with just a few clicks
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }
