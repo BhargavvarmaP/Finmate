@@ -14,20 +14,28 @@ import { IncomeTaxFiling } from '@/pages/financial/IncomeTaxFiling';
 import { Settings } from '@/pages/Settings';
 import { useAuth } from '@/contexts/AuthContext';
 
-export function AppRoutes() {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
 
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    if (!user) return <Navigate to="/login" />;
-    return <>{children}</>;
-  };
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
-  const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
-    if (!user) return <Navigate to="/login" />;
-    if (user.onboardingComplete) return <Navigate to="/dashboard" />;
-    return <>{children}</>;
-  };
+  return <>{children}</>;
+};
 
+const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  // Add additional logic here if onboarding routes should only be accessible during onboarding
+  return <>{children}</>;
+};
+
+export function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
@@ -35,13 +43,14 @@ export function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Onboarding routes */}
-      <Route path="/auth/kyc" element={<OnboardingRoute><KYCVerification /></OnboardingRoute>} />
-      <Route path="/auth/business-setup" element={<OnboardingRoute><BusinessSetup /></OnboardingRoute>} />
-      <Route path="/auth/payment-setup" element={<OnboardingRoute><PaymentSetup /></OnboardingRoute>} />
-
       {/* Protected routes */}
-      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/gst" element={<GSTFiling />} />
@@ -49,6 +58,32 @@ export function AppRoutes() {
         <Route path="/income-tax" element={<IncomeTaxFiling />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
+
+      {/* Onboarding routes */}
+      <Route
+        path="/auth/kyc"
+        element={
+          <OnboardingRoute>
+            <KYCVerification />
+          </OnboardingRoute>
+        }
+      />
+      <Route
+        path="/auth/business-setup"
+        element={
+          <OnboardingRoute>
+            <BusinessSetup />
+          </OnboardingRoute>
+        }
+      />
+      <Route
+        path="/auth/payment-setup"
+        element={
+          <OnboardingRoute>
+            <PaymentSetup />
+          </OnboardingRoute>
+        }
+      />
 
       {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" />} />

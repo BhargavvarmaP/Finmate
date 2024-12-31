@@ -9,21 +9,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sun, Moon, LogOut } from 'lucide-react';
-import { User } from '@/types';
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className="border-b">
-      <div className="flex h-16 items-center px-4">
-        <div className="ml-auto flex items-center space-x-4">
+    <nav className="border-b border-gray-700 bg-gray-800">
+      <div className="flex h-16 items-center justify-between px-4">
+        <div className="flex-1" />
+        <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="h-9 w-9"
+            className="h-9 w-9 text-gray-300"
           >
             {theme === 'dark' ? <Sun /> : <Moon />}
           </Button>
