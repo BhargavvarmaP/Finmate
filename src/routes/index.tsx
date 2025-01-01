@@ -1,92 +1,218 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Layout } from '@/components/layout/Layout';
+import { createBrowserRouter } from 'react-router-dom';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { AppLayout } from '@/components/layout/AppLayout';
+
+// Pages
 import { Home } from '@/pages/Home';
+import { Dashboard } from '@/pages/Dashboard';
+import { Settings } from '@/pages/Settings';
+import { NotFound } from '@/pages/NotFound';
+
+// Auth Pages
 import { Login } from '@/pages/auth/Login';
 import { Register } from '@/pages/auth/Register';
-import { KYCVerification } from '@/pages/auth/KYCVerification';
 import { BusinessSetup } from '@/pages/auth/BusinessSetup';
+import { KYCVerification } from '@/pages/auth/KYCVerification';
 import { PaymentSetup } from '@/pages/auth/PaymentSetup';
-import { Dashboard } from '@/pages/Dashboard';
-import { Transactions } from '@/pages/Transactions';
+
+// Financial Pages
 import { GSTFiling } from '@/pages/financial/GSTFiling';
 import { TDSManagement } from '@/pages/financial/TDSManagement';
 import { IncomeTaxFiling } from '@/pages/financial/IncomeTaxFiling';
-import { Settings } from '@/pages/Settings';
-import { useAuth } from '@/contexts/AuthContext';
+import { PayrollManagement } from '@/pages/financial/PayrollManagement';
+import { MultiCurrency } from '@/pages/financial/MultiCurrency';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+// Compliance Pages
+import { ComplianceMonitoring } from '@/pages/compliance/ComplianceMonitoring';
+import { AuditAnalytics } from '@/pages/compliance/AuditAnalytics';
+import { FinancialReporting } from '@/pages/compliance/FinancialReporting';
+import { XBRLFiling } from '@/pages/compliance/XBRLFiling';
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+// Document Pages
+import { DocumentStorage } from '@/pages/documents/DocumentStorage';
 
-  return <>{children}</>;
-};
+// Marketing Pages
+import { AboutUs } from '@/pages/marketing/AboutUs';
+import { Features } from '@/pages/marketing/Features';
+import { Pricing } from '@/pages/marketing/Pricing';
+import { Blog } from '@/pages/marketing/Blog';
+import { CaseStudies } from '@/pages/marketing/CaseStudies';
+import { Testimonials } from '@/pages/marketing/Testimonials';
 
-const OnboardingRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
+// API Pages
+import { APIOverview } from '@/pages/api/Overview';
+import { APIReference } from '@/pages/api/Reference';
+import { Integration } from '@/pages/api/Integration';
 
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+// Additional Features
+import { Events } from '@/pages/events/Events';
+import { Partners } from '@/pages/partners/Partners';
+import { Feedback } from '@/pages/feedback/Feedback';
 
-  // Add additional logic here if onboarding routes should only be accessible during onboarding
-  return <>{children}</>;
-};
+// Support Pages
+import { HelpCenter } from '@/pages/support/HelpCenter';
 
-export function AppRoutes() {
-  return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      {/* Protected routes */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/transactions" element={<Transactions />} />
-        <Route path="/gst" element={<GSTFiling />} />
-        <Route path="/tds" element={<TDSManagement />} />
-        <Route path="/income-tax" element={<IncomeTaxFiling />} />
-        <Route path="/settings" element={<Settings />} />
-      </Route>
-
-      {/* Onboarding routes */}
-      <Route
-        path="/auth/kyc"
-        element={
-          <OnboardingRoute>
-            <KYCVerification />
-          </OnboardingRoute>
-        }
-      />
-      <Route
-        path="/auth/business-setup"
-        element={
-          <OnboardingRoute>
-            <BusinessSetup />
-          </OnboardingRoute>
-        }
-      />
-      <Route
-        path="/auth/payment-setup"
-        element={
-          <OnboardingRoute>
-            <PaymentSetup />
-          </OnboardingRoute>
-        }
-      />
-
-      {/* Fallback route */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
-  );
-}
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: 'auth',
+        children: [
+          {
+            path: 'login',
+            element: <Login />,
+          },
+          {
+            path: 'register',
+            element: <Register />,
+          },
+          {
+            path: 'business-setup',
+            element: <BusinessSetup />,
+          },
+          {
+            path: 'kyc-verification',
+            element: <KYCVerification />,
+          },
+          {
+            path: 'payment-setup',
+            element: <PaymentSetup />,
+          },
+        ],
+      },
+      {
+        path: 'app',
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: 'financial',
+            children: [
+              {
+                path: 'gst',
+                element: <GSTFiling />,
+              },
+              {
+                path: 'tds',
+                element: <TDSManagement />,
+              },
+              {
+                path: 'income-tax',
+                element: <IncomeTaxFiling />,
+              },
+              {
+                path: 'payroll',
+                element: <PayrollManagement />,
+              },
+              {
+                path: 'multi-currency',
+                element: <MultiCurrency />,
+              },
+            ],
+          },
+          {
+            path: 'compliance',
+            children: [
+              {
+                path: 'monitoring',
+                element: <ComplianceMonitoring />,
+              },
+              {
+                path: 'audit',
+                element: <AuditAnalytics />,
+              },
+              {
+                path: 'reporting',
+                element: <FinancialReporting />,
+              },
+              {
+                path: 'xbrl',
+                element: <XBRLFiling />,
+              },
+            ],
+          },
+          {
+            path: 'documents',
+            element: <DocumentStorage />,
+          },
+          {
+            path: 'settings',
+            element: <Settings />,
+          },
+        ],
+      },
+      {
+        path: 'marketing',
+        children: [
+          {
+            path: 'about',
+            element: <AboutUs />,
+          },
+          {
+            path: 'features',
+            element: <Features />,
+          },
+          {
+            path: 'pricing',
+            element: <Pricing />,
+          },
+          {
+            path: 'blog',
+            element: <Blog />,
+          },
+          {
+            path: 'case-studies',
+            element: <CaseStudies />,
+          },
+          {
+            path: 'testimonials',
+            element: <Testimonials />,
+          },
+        ],
+      },
+      {
+        path: 'api',
+        children: [
+          {
+            path: 'overview',
+            element: <APIOverview />,
+          },
+          {
+            path: 'reference',
+            element: <APIReference />,
+          },
+          {
+            path: 'integration',
+            element: <Integration />,
+          },
+        ],
+      },
+      {
+        path: 'events',
+        element: <Events />,
+      },
+      {
+        path: 'partners',
+        element: <Partners />,
+      },
+      {
+        path: 'feedback',
+        element: <Feedback />,
+      },
+      {
+        path: 'help',
+        element: <HelpCenter />,
+      },
+    ],
+  },
+]);
